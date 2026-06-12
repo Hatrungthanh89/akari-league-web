@@ -1,0 +1,6 @@
+{
+  "name": "RandomLeague",
+  "description": "Giải đấu RandomLeague - Quản lý bảng xếp hạng, cầu thủ, kết quả, tài chính, luật lệ và bản tin.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

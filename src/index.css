@@ -1,0 +1,206 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-emerald: #6366f1; /* Override brand emerald with indigo to match Bento Theme */
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+body {
+  background-color: #020617; /* bg-slate-950 */
+  font-family: var(--font-sans);
+  color: #e2e8f0; /* text-slate-200 */
+}
+
+/* Custom Utilities styled specifically for the Bento Grid aesthetic */
+
+.glass-panel {
+  background-color: #0f172a; /* bg-slate-900 */
+  border: 1px solid #1e293b; /* border-slate-800 */
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+  border-radius: 24px; /* rounded-3xl */
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+}
+
+.glass-panel:hover {
+  border-color: #334155; /* hover border-slate-700 */
+}
+
+.input-glass {
+  background: #020617; /* bg-slate-950 */
+  border: 1px solid #1e293b; /* border-slate-800 */
+  border-radius: 12px; /* rounded-xl */
+  color: #f8fafc;
+  outline: none;
+  font-size: 0.875rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.input-glass:focus {
+  border-color: #6366f1; /* indigo-500 */
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+.btn-primary {
+  background: #4f46e5; /* bg-indigo-600 */
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 12px; /* rounded-xl */
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-primary:hover {
+  background: #6366f1; /* bg-indigo-500 */
+  transform: translateY(-1px);
+  box-shadow: 0 12px 20px -3px rgba(79, 70, 229, 0.35);
+}
+
+.btn-secondary {
+  background: #1e293b; /* bg-slate-800 */
+  color: #e2e8f0; /* text-slate-200 */
+  border: 1px solid #334155; /* border-slate-700 */
+  font-weight: 500;
+  font-size: 0.875rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 12px; /* rounded-xl */
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-secondary:hover {
+  background: #334155; /* bg-slate-750 / border hover */
+  color: #ffffff;
+  border-color: #475569;
+}
+
+/* Navigation Links - Sleek Bento Tab Elements */
+.nav-link {
+  color: #94a3b8; /* text-slate-400 */
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 12px; /* rounded-xl */
+  transition: all 0.2s ease-in-out;
+  position: relative;
+}
+
+.nav-link:hover {
+  color: #f1f5f9;
+  background: rgba(30, 41, 59, 0.4); /* bg-slate-800/40 */
+}
+
+.nav-link.active {
+  color: #818cf8; /* text-indigo-400 */
+  background: rgba(30, 41, 59, 0.7); /* bg-slate-800/70 */
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.nav-link.active::after {
+  display: none; /* Removed the line accent in favor of deep bento frame highlights */
+}
+
+/* Custom Table */
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.custom-table th {
+  text-align: left;
+  padding: 14px 18px;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #94a3b8; /* text-slate-400 */
+  border-bottom: 2px solid #1e293b; /* border-slate-800 */
+  letter-spacing: 0.08em;
+}
+
+.custom-table td {
+  padding: 16px 18px;
+  font-size: 0.875rem;
+  border-bottom: 1px solid #1e293b; /* border-slate-800 */
+}
+
+.custom-table tr:hover td {
+  background-color: rgba(30, 41, 59, 0.25); /* bg-slate-800/25 */
+}
+
+/* Scrollbar aesthetic styling for Bento scroll containers */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e293b; /* slate-800 */
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #334155; /* slate-700 */
+}
+
+/* Modal and transition animations */
+.modal-overlay {
+  background: rgba(2, 6, 17, 0.85); /* bg-slate-950/85 */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: 1rem;
+}
+
+.modal-content {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+  border-radius: 24px; /* rounded-3xl */
+  animation: modalEnter 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes modalEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Keyframes animations & Fade in Up */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Form switch controls */
+input[type="checkbox"] {
+  accent-color: #6366f1; /* indigo-500 */
+}
