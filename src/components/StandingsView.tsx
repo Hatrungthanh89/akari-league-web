@@ -31,11 +31,16 @@ export default function StandingsView({ players, matches, penalties }: Standings
     });
   });
 
-  // Get Top 5 Scorers
-  const topScorers = [...players]
+  // Get All Scorers
+  const allScorers = [...players]
     .filter(p => p.goals > 0)
-    .sort((a, b) => b.goals - a.goals || a.name.localeCompare(b.name))
-    .slice(0, 5);
+    .sort((a, b) => b.goals - a.goals || a.name.localeCompare(b.name));
+
+  // Pagination for Scorers
+  const SCORERS_PER_PAGE = 5;
+  const [scorerPage, setScorerPage] = useState(0);
+  const totalScorerPages = Math.ceil(allScorers.length / SCORERS_PER_PAGE);
+  const currentScorers = allScorers.slice(scorerPage * SCORERS_PER_PAGE, (scorerPage + 1) * SCORERS_PER_PAGE);
 
   const activeRound = roundKeys[currentRoundIndex] || null;
   const activeRoundStandings = activeRound ? rounds[activeRound] : [];
@@ -122,16 +127,16 @@ export default function StandingsView({ players, matches, penalties }: Standings
               <span>Vua Phá Lưới (Top Ghi Bàn)</span>
             </h3>
 
-            {topScorers.length === 0 ? (
+            {allScorers.length === 0 ? (
               <div className="text-center py-8 text-slate-500 text-sm">
                 Chưa ghi nhận bàn thắng nào trong giải đấu.
               </div>
             ) : (
               <div className="space-y-4">
-                {topScorers.map((player, idx) => (
+                {currentScorers.map((player, idx) => (
                   <div key={player.id} className="flex items-center justify-between bg-slate-900/40 p-3 rounded-xl border border-slate-800">
                     <div className="flex items-center gap-3">
-                      <div className="font-bold text-slate-500 text-sm w-4">{idx + 1}.</div>
+                      <div className="font-bold text-slate-500 text-sm w-4">{scorerPage * SCORERS_PER_PAGE + idx + 1}.</div>
                       
                       {player.image ? (
                         <img 
@@ -162,6 +167,29 @@ export default function StandingsView({ players, matches, penalties }: Standings
                     </div>
                   </div>
                 ))}
+
+                {/* Pagination Controls */}
+                {totalScorerPages > 1 && (
+                  <div className="flex items-center justify-between pt-2 border-t border-slate-800/50">
+                    <button
+                      onClick={() => setScorerPage(p => Math.max(0, p - 1))}
+                      disabled={scorerPage === 0}
+                      className="text-slate-400 hover:text-indigo-400 disabled:opacity-30 disabled:pointer-events-none p-1.5 rounded-lg bg-slate-800/50 hover:bg-slate-700 transition"
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                    </button>
+                    <span className="text-[10px] uppercase tracking-wider text-slate-500 font-bold">
+                      Trang {scorerPage + 1} / {totalScorerPages}
+                    </span>
+                    <button
+                      onClick={() => setScorerPage(p => Math.min(totalScorerPages - 1, p + 1))}
+                      disabled={scorerPage === totalScorerPages - 1}
+                      className="text-slate-400 hover:text-indigo-400 disabled:opacity-30 disabled:pointer-events-none p-1.5 rounded-lg bg-slate-800/50 hover:bg-slate-700 transition"
+                    >
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </div>
