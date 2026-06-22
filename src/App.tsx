@@ -217,7 +217,13 @@ export default function App() {
         roundMatches,
         players
       })
-    }).then(res => res.json()).then(async (aiSummary) => {
+    }).then(async res => {
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`HTTP ${res.status}: ${text}`);
+      }
+      return res.json();
+    }).then(async (aiSummary) => {
       if(aiSummary.title) {
         const updateData: any = {
           title: aiSummary.title,
@@ -228,10 +234,12 @@ export default function App() {
 
         await setDoc(doc(db, 'news', deterministicSummaryId), updateData, { merge: true });
         alert("Thành công! Bản tin AI phân tích Vòng " + round + " đã được xuất bản.");
+      } else if (aiSummary.error) {
+        throw new Error(aiSummary.error);
       }
     }).catch(e => {
       console.error(e);
-      alert("Có lỗi khi gọi AI. Bản tin mặc định đã được tạo.");
+      alert("Lỗi AI: " + e.message);
     });
   };
 

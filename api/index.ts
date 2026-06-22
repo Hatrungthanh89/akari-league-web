@@ -109,10 +109,10 @@ Thông tin vòng đấu:
 - Danh sách tất cả các trận đấu của vòng: ${JSON.stringify(roundMatches)}
 - Danh sách các cầu thủ tham gia giải: ${JSON.stringify(players)}
 
-Nhiệm vụ của bạn:
-1. Đưa ra 3 lời bình luận chung về vòng đấu này dưới góc nhìn của 3 BLV nổi tiếng Việt Nam (Quang Huy, Quang Tùng, Anh Ngọc).
-2. Viết một DỰ ĐOÁN sâu sắc, hấp dẫn về diễn biến của vòng đấu tiếp theo (Vòng ${Number(round) + 1}).
-3. Chọn ra MỘT cầu thủ xuất sắc/tiêu biểu nhất của vòng này (dựa vào số bàn thắng hoặc đóng góp quan trọng) và viết một đoạn ngắn vinh danh cầu thủ đó. Nhớ nêu tên và đội bóng của họ.
+Nhiệm vụ của bạn (HÃY VIẾT THẬT NGẮN GỌN, SÚC TÍCH để tránh vượt thời gian xử lý):
+1. Đưa ra 3 lời bình luận chung về vòng đấu này dưới góc nhìn của 3 BLV nổi tiếng Việt Nam (Quang Huy, Quang Tùng, Anh Ngọc). Mỗi bình luận chỉ khoảng 2 câu.
+2. Viết một DỰ ĐOÁN ngắn gọn (tối đa 2 câu) về diễn biến của vòng đấu tiếp theo (Vòng ${Number(round) + 1}).
+3. Chọn ra MỘT cầu thủ xuất sắc nhất của vòng này và viết một đoạn ngắn (2 câu) vinh danh cầu thủ đó.
 
 Hãy sinh ra lời bình luận chuyên biệt từ BA bình luận viên huyền thoại Việt Nam:
 1. BLV Quang Huy (phong cách "passionate"): Bình luận rực lửa, hào sảng về các bàn thắng và kịch tính.
