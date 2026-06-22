@@ -59,6 +59,20 @@ export default function App() {
     }
   }, []);
 
+  const getGeminiApiKey = () => {
+    let key = localStorage.getItem('akari_gemini_key');
+    if (!key) {
+      key = window.prompt("Để hệ thống AI hoạt động, vui lòng dán (paste) đoạn mã Gemini API Key của bạn vào đây (chỉ cần nhập 1 lần):");
+      if (key && key.trim().length > 10) {
+        localStorage.setItem('akari_gemini_key', key.trim());
+      } else if (key) {
+        alert("API Key không hợp lệ.");
+        return undefined;
+      }
+    }
+    return key?.trim() || undefined;
+  };
+
   // One-time Migration from LocalStorage to Firebase
   const handleMigrateData = async () => {
     if (players.length > 0) {
@@ -148,11 +162,17 @@ export default function App() {
       return rest;
     });
 
+    const apiKey = getGeminiApiKey();
+    if (!apiKey) {
+      alert("Bạn chưa cung cấp API Key hợp lệ. Bản tin mặc định đã được tạo.");
+      return;
+    }
+
     // Call Gemini API in background
     fetch("/api/gemini/generate-match-report", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ match: newMatch, players: playersForAI })
+      body: JSON.stringify({ match: newMatch, players: playersForAI, apiKey })
     }).then(res => res.json()).then(async (aiReport) => {
       if(aiReport.title) {
         await setDoc(doc(db, 'news', deterministicReportId), {
@@ -212,6 +232,12 @@ export default function App() {
     localSummary.id = deterministicSummaryId;
     await setDoc(doc(db, 'news', deterministicSummaryId), localSummary, { merge: true });
 
+    const apiKey = getGeminiApiKey();
+    if (!apiKey) {
+      alert("Bạn chưa cung cấp API Key hợp lệ. Bản tin mặc định đã được tạo.");
+      return;
+    }
+
     alert("Đang yêu cầu AI phân tích dữ liệu và nhận định Vòng " + round + ". Vui lòng chờ vài giây...");
 
     // Lược bỏ thuộc tính 'image' (base64 lớn) để tránh lỗi 413 Payload Too Large
@@ -227,7 +253,8 @@ export default function App() {
       body: JSON.stringify({
         round,
         roundMatches,
-        players: playersForAI
+        players: playersForAI,
+        apiKey
       })
     }).then(async res => {
       if (!res.ok) {

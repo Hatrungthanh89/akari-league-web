@@ -7,33 +7,29 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
-let aiClient: GoogleGenAI | null = null;
-function getGeminiClient(): GoogleGenAI {
-  if (!aiClient) {
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      throw new Error("GEMINI_API_KEY is not configured in environment variables.");
-    }
-    aiClient = new GoogleGenAI({
-      apiKey,
-      httpOptions: {
-        headers: {
-          'User-Agent': 'aistudio-build',
-        }
-      }
-    });
+function getGeminiClient(reqApiKey?: string): GoogleGenAI {
+  const apiKey = reqApiKey || process.env.GEMINI_API_KEY;
+  if (!apiKey) {
+    throw new Error("GEMINI_API_KEY is not configured in environment variables and not provided by client.");
   }
-  return aiClient;
+  return new GoogleGenAI({
+    apiKey,
+    httpOptions: {
+      headers: {
+        'User-Agent': 'aistudio-build',
+      }
+    }
+  });
 }
 
 app.post("/api/gemini/generate-match-report", async (req, res) => {
   try {
-    const { match, players } = req.body;
+    const { match, players, apiKey } = req.body;
     if (!match || !players) {
       return res.status(400).json({ error: "Missing match or players details in request." });
     }
 
-    const ai = getGeminiClient();
+    const ai = getGeminiClient(apiKey);
     const prompt = `Hãy soạn một bài viết phân tích chi tiết (Match Report) cho trận đấu gần đây thuộc giải đấu Akari League (Mùa 3 - Tam Hùng Tranh Bá).
 Thông tin trận đấu:
 - Vòng đấu: ${match.round}
@@ -97,12 +93,12 @@ Hãy xuất ra định dạng JSON chính xác theo cấu trúc sau:
 
 app.post("/api/gemini/generate-round-summary", async (req, res) => {
   try {
-    const { round, roundMatches, players } = req.body;
+    const { round, roundMatches, players, apiKey } = req.body;
     if (round === undefined || !roundMatches || !players) {
       return res.status(400).json({ error: "Missing round data, roundMatches or players info." });
     }
 
-    const ai = getGeminiClient();
+    const ai = getGeminiClient(apiKey);
     const prompt = `Hãy soạn thảo một Bản Tin Tổng Hợp Vòng Đấu (Round Summary Bulletin) cho Vòng ${round} của giải đấu Akari League (Mùa 3 - Tam Hùng Tranh Bá).
 Thông tin vòng đấu:
 - Vòng số: ${round}
