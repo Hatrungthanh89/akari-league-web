@@ -142,11 +142,17 @@ export default function App() {
 
     await batch.commit();
 
+    // Lược bỏ thuộc tính 'image' (base64 lớn) để tránh lỗi 413 Payload Too Large
+    const playersForAI = updatedPlayers.map(p => {
+      const { image, ...rest } = p;
+      return rest;
+    });
+
     // Call Gemini API in background
     fetch("/api/gemini/generate-match-report", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ match: newMatch, players: updatedPlayers })
+      body: JSON.stringify({ match: newMatch, players: playersForAI })
     }).then(res => res.json()).then(async (aiReport) => {
       if(aiReport.title) {
         await setDoc(doc(db, 'news', deterministicReportId), {
@@ -208,6 +214,12 @@ export default function App() {
 
     alert("Đang yêu cầu AI phân tích dữ liệu và nhận định Vòng " + round + ". Vui lòng chờ vài giây...");
 
+    // Lược bỏ thuộc tính 'image' (base64 lớn) để tránh lỗi 413 Payload Too Large
+    const playersForAI = players.map(p => {
+      const { image, ...rest } = p;
+      return rest;
+    });
+
     // Then call Gemini API to enhance the summary
     fetch("/api/gemini/generate-round-summary", {
       method: "POST",
@@ -215,7 +227,7 @@ export default function App() {
       body: JSON.stringify({
         round,
         roundMatches,
-        players
+        players: playersForAI
       })
     }).then(async res => {
       if (!res.ok) {
