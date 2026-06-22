@@ -221,7 +221,9 @@ export default function App() {
       if(aiSummary.title) {
         await setDoc(doc(db, 'news', deterministicSummaryId), {
           title: aiSummary.title,
-          comments: aiSummary.comments
+          comments: aiSummary.comments,
+          nextRoundPrediction: aiSummary.nextRoundPrediction,
+          standoutPlayer: aiSummary.standoutPlayer
         }, { merge: true });
         alert("Thành công! Bản tin AI phân tích Vòng " + round + " đã được xuất bản.");
       }

@@ -78,6 +78,12 @@ export interface News {
     style: 'passionate' | 'analytical' | 'poetic';
   };
   comments?: NewsComment[];
+  nextRoundPrediction?: string;
+  standoutPlayer?: {
+    name: string;
+    team: string;
+    article: string;
+  };
 }
 
 export interface TeamStanding {

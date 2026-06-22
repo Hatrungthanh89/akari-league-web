@@ -110,44 +110,34 @@ Thông tin vòng đấu:
 - Danh sách các cầu thủ tham gia giải: ${JSON.stringify(players)}
 
 Nhiệm vụ của bạn:
-1. Tổng hợp kết quả chung của các trận đấu trong vòng ${round}.
-2. ĐÁNH GIÁ CHI TIẾT phong độ của CÁC CẦU THỦ NỔI BẬT trong vòng (dựa trên số bàn thắng, thẻ phạt trong trận). Hãy nêu đích danh tên cầu thủ.
-3. Đưa ra DỰ ĐOÁN, nhận định và lời khuyên chiến thuật cho vòng đấu tiếp theo (Vòng ${Number(round) + 1}).
+1. Đưa ra 3 lời bình luận chung về vòng đấu này dưới góc nhìn của 3 BLV nổi tiếng Việt Nam (Quang Huy, Quang Tùng, Anh Ngọc).
+2. Viết một DỰ ĐOÁN sâu sắc, hấp dẫn về diễn biến của vòng đấu tiếp theo (Vòng ${Number(round) + 1}).
+3. Chọn ra MỘT cầu thủ xuất sắc/tiêu biểu nhất của vòng này (dựa vào số bàn thắng hoặc đóng góp quan trọng) và viết một đoạn ngắn vinh danh cầu thủ đó. Nhớ nêu tên và đội bóng của họ.
 
-Hãy sinh ra lời bình luận chuyên biệt từ BA bình luận viên huyền thoại Việt Nam, mỗi người sẽ tập trung vào một khía cạnh và mang đậm giọng điệu thương hiệu của họ:
-1. BLV Quang Huy (phong cách "passionate" - Sôi động, nhiệt huyết): Tổng hợp diễn biến, kết quả vòng đấu vừa qua một cách bốc lửa, ca tụng lòng quả cảm và khí thế thi đấu của các đội.
-2. BLV Quang Tùng (phong cách "analytical" - Phân tích chiến thuật, sắc sảo): Tập trung đánh giá phong độ cá nhân của các cầu thủ xuất sắc hoặc mờ nhạt, phân tích chiến thuật, số liệu bàn thắng/thẻ phạt của họ đóng góp cho đội.
-3. BLV Anh Ngọc (phong cách "poetic" - Lãng mạn, nên thơ): Đưa ra nhận định và dự đoán cho vòng đấu tiếp theo bằng giọng văn lãng mạn, ví von bóng đá như nghệ thuật và đưa ra viễn cảnh nên thơ cho loạt trận tới.
+Hãy sinh ra lời bình luận chuyên biệt từ BA bình luận viên huyền thoại Việt Nam:
+1. BLV Quang Huy (phong cách "passionate"): Bình luận rực lửa, hào sảng về các bàn thắng và kịch tính.
+2. BLV Quang Tùng (phong cách "analytical"): Phân tích chuyên nghiệp sắc bén, khoa học về chiến thuật.
+3. BLV Anh Ngọc (phong cách "poetic"): Lãng mạn, thơ mộng, dùng các hình tượng lãng mạn lơ đãng.
 
 Yêu cầu xuất ra định dạng JSON chuẩn theo schema sau:
 {
   "title": "Tiêu đề hoành tráng phong cách thời báo bóng đá thể thao tổng hợp Vòng ${round} (tiếng Việt)",
   "comments": [
     {
-      "name": "BLV Quang Huy",
-      "avatar": "H",
-      "role": "Sôi động - Đột phá",
-      "color": "#ef4444",
-      "style": "passionate",
-      "comment": "Nội dung bình luận bốc lửa của BLV Quang Huy về chiến tích Vòng ${round}..."
-    },
-    {
-      "name": "BLV Quang Tùng",
-      "avatar": "T",
-      "role": "Phân tích chiến thuật",
-      "color": "#3b82f6",
-      "style": "analytical",
-      "comment": "Nội dung đánh giá chiến thuật cực sâu sắc của BLV Quang Tùng về Vòng ${round}..."
-    },
-    {
-      "name": "BLV Anh Ngọc",
-      "avatar": "N",
-      "role": "Lãng mạn phong vị Ý",
-      "color": "#a855f7",
-      "style": "poetic",
-      "comment": "Nội dung tản văn lãng mạn bay bổng của BLV Anh Ngọc ví von vẻ đẹp Vòng ${round}..."
+      "name": "Tên BLV (Ví dụ: BLV Quang Huy)",
+      "avatar": "Ký tự đầu tiên (H, T, hoặc N)",
+      "role": "Vai trò của BLV",
+      "color": "Mã màu hex (Ví dụ: #ef4444)",
+      "style": "passionate / analytical / poetic",
+      "comment": "Nội dung bình luận..."
     }
-  ]
+  ],
+  "nextRoundPrediction": "Đoạn văn dự đoán và nhận định chuyên sâu cho vòng đấu tiếp theo...",
+  "standoutPlayer": {
+    "name": "Tên cầu thủ",
+    "team": "Tên đội bóng của cầu thủ đó",
+    "article": "Bài viết vinh danh phong độ chói sáng của cầu thủ này trong vòng đấu vừa qua"
+  }
 }`;
 
     const response = await ai.models.generateContent({
@@ -173,9 +163,19 @@ Yêu cầu xuất ra định dạng JSON chuẩn theo schema sau:
                 },
                 required: ["name", "avatar", "role", "color", "style", "comment"]
               }
+            },
+            nextRoundPrediction: { type: Type.STRING },
+            standoutPlayer: {
+              type: Type.OBJECT,
+              properties: {
+                name: { type: Type.STRING },
+                team: { type: Type.STRING },
+                article: { type: Type.STRING }
+              },
+              required: ["name", "team", "article"]
             }
           },
-          required: ["title", "comments"]
+          required: ["title", "comments", "nextRoundPrediction", "standoutPlayer"]
         }
       }
     });

@@ -1,5 +1,5 @@
 import { News } from '../types';
-import { Newspaper, Trash2, Mic, Clock, Quote, Sparkles, MessageSquareCode } from 'lucide-react';
+import { Newspaper, Trash2, Mic, Clock, Quote, Sparkles, MessageSquareCode, Star, TrendingUp } from 'lucide-react';
 
 interface NewsViewProps {
   news: News[];
@@ -226,6 +226,41 @@ export default function NewsView({ news, onDeleteNews }: NewsViewProps) {
                       );
                     })}
                   </div>
+
+                  {/* Standout Player & Next Round Prediction */}
+                  {(item.standoutPlayer || item.nextRoundPrediction) && (
+                    <div className="px-4 md:px-6 pb-6 pt-0 space-y-4">
+                      {item.standoutPlayer && (
+                        <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4.5 relative overflow-hidden group">
+                          <div className="absolute -right-4 -top-4 text-amber-500/10 group-hover:text-amber-500/20 transition-colors duration-500">
+                            <Star className="w-24 h-24" fill="currentColor" />
+                          </div>
+                          <div className="flex items-center gap-2 mb-2 relative z-10">
+                            <Sparkles className="w-5 h-5 text-amber-400" />
+                            <h4 className="font-black text-amber-400 tracking-wide uppercase text-sm">Ngôi Sao Vòng Đấu</h4>
+                          </div>
+                          <div className="relative z-10">
+                            <div className="font-extrabold text-white text-lg">{item.standoutPlayer.name} <span className="text-sm font-semibold text-amber-200/60 ml-1">({item.standoutPlayer.team})</span></div>
+                            <p className="text-amber-100/80 text-sm mt-2 leading-relaxed italic border-l-2 border-amber-500/40 pl-3">
+                              "{item.standoutPlayer.article}"
+                            </p>
+                          </div>
+                        </div>
+                      )}
+
+                      {item.nextRoundPrediction && (
+                        <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-4.5 relative overflow-hidden">
+                          <div className="flex items-center gap-2 mb-2 relative z-10">
+                            <TrendingUp className="w-5 h-5 text-emerald-400" />
+                            <h4 className="font-black text-emerald-400 tracking-wide uppercase text-sm">Góc Dự Đoán Vòng Tới</h4>
+                          </div>
+                          <p className="text-emerald-50 text-sm leading-relaxed relative z-10">
+                            {item.nextRoundPrediction}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               );
             }
