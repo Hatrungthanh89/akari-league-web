@@ -204,7 +204,7 @@ export default function App() {
     // First, save the local (non-AI) summary to ensure it exists
     const localSummary = generateLocalRoundSummary(round, matches, players);
     localSummary.id = deterministicSummaryId;
-    await setDoc(doc(db, 'news', deterministicSummaryId), localSummary);
+    await setDoc(doc(db, 'news', deterministicSummaryId), localSummary, { merge: true });
 
     alert("Đang yêu cầu AI phân tích dữ liệu và nhận định Vòng " + round + ". Vui lòng chờ vài giây...");
 
@@ -219,12 +219,14 @@ export default function App() {
       })
     }).then(res => res.json()).then(async (aiSummary) => {
       if(aiSummary.title) {
-        await setDoc(doc(db, 'news', deterministicSummaryId), {
+        const updateData: any = {
           title: aiSummary.title,
-          comments: aiSummary.comments,
-          nextRoundPrediction: aiSummary.nextRoundPrediction,
-          standoutPlayer: aiSummary.standoutPlayer
-        }, { merge: true });
+          comments: aiSummary.comments
+        };
+        if (aiSummary.nextRoundPrediction) updateData.nextRoundPrediction = aiSummary.nextRoundPrediction;
+        if (aiSummary.standoutPlayer) updateData.standoutPlayer = aiSummary.standoutPlayer;
+
+        await setDoc(doc(db, 'news', deterministicSummaryId), updateData, { merge: true });
         alert("Thành công! Bản tin AI phân tích Vòng " + round + " đã được xuất bản.");
       }
     }).catch(e => {
