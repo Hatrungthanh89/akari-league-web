@@ -4,6 +4,7 @@ import { TEAMS } from '../data';
 import { PlusCircle, Target, Trash2, Calendar, ShieldAlert, Award, X, AlertOctagon } from 'lucide-react';
 
 interface ResultsViewProps {
+  isAdmin: boolean;
   matches: Match[];
   penalties: Penalty[];
   players: Player[];
@@ -14,6 +15,7 @@ interface ResultsViewProps {
 }
 
 export default function ResultsView({
+  isAdmin,
   matches,
   penalties,
   players,
@@ -162,23 +164,25 @@ export default function ResultsView({
           <p className="text-slate-400 mt-1">Ghi nhận tỉ số trận đấu, diễn biến sự kiện trực tiếp và loạt đá tie-break</p>
         </div>
         
-        <div className="flex gap-3">
-          <button
-            onClick={() => setShowPenaltyModal(true)}
-            className="btn-secondary flex items-center gap-2 cursor-pointer bg-amber-500/5 text-amber-400 hover:bg-amber-500/10 border-amber-500/20"
-          >
-            <Target className="w-5 h-5" />
-            <span>Penalty</span>
-          </button>
-          
-          <button
-            onClick={() => setShowMatchModal(true)}
-            className="btn-primary flex items-center gap-2 cursor-pointer"
-          >
-            <PlusCircle className="w-5 h-5 text-slate-900" />
-            <span>Nhập Kết Quả</span>
-          </button>
-        </div>
+        {isAdmin && (
+          <div className="flex gap-3">
+            <button
+              onClick={() => setShowPenaltyModal(true)}
+              className="btn-secondary flex items-center gap-2 cursor-pointer bg-amber-500/5 text-amber-400 hover:bg-amber-500/10 border-amber-500/20"
+            >
+              <Target className="w-5 h-5" />
+              <span>Penalty</span>
+            </button>
+            
+            <button
+              onClick={() => setShowMatchModal(true)}
+              className="btn-primary flex items-center gap-2 cursor-pointer"
+            >
+              <PlusCircle className="w-5 h-5 text-slate-900" />
+              <span>Nhập Kết Quả</span>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Main ledger list grouped by round */}
@@ -223,17 +227,19 @@ export default function ResultsView({
                         key={m.id}
                         className="glass-panel p-5 relative group flex flex-col border border-slate-900 hover:border-slate-800 transition"
                       >
-                        <button
-                          onClick={() => {
-                            if (confirm('Xóa kết quả trận đấu này? Điểm số BXH và hiệu số các cầu thủ sẽ được tự động đảo lùi hoàn toàn.')) {
-                              onDeleteMatch(m.id);
-                            }
-                          }}
-                          className="absolute right-4 top-4 text-slate-500 hover:text-red-400 p-1.5 rounded bg-slate-900/40 transition cursor-pointer opacity-0 group-hover:opacity-100 duration-150"
-                          title="Xóa kết quả"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                        {isAdmin && (
+                          <button
+                            onClick={() => {
+                              if (confirm('Xóa kết quả trận đấu này? Điểm số BXH và hiệu số các cầu thủ sẽ được tự động đảo lùi hoàn toàn.')) {
+                                onDeleteMatch(m.id);
+                              }
+                            }}
+                            className="absolute right-4 top-4 text-slate-500 hover:text-red-400 p-1.5 rounded bg-slate-900/40 transition cursor-pointer opacity-0 group-hover:opacity-100 duration-150"
+                            title="Xóa kết quả"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        )}
 
                         <div className="flex justify-between items-center w-full max-w-2xl mx-auto py-1">
                           {/* Team A */}
@@ -285,17 +291,19 @@ export default function ResultsView({
                       key={p.id}
                       className="glass-panel p-5 relative group flex flex-col border border-amber-500/20 bg-amber-500/[0.02] hover:bg-amber-500/[0.04] transition"
                     >
-                      <button
-                        onClick={() => {
-                          if (confirm('Xóa kết quả luân lưu Penalty này?')) {
-                            onDeletePenalty(p.id);
-                          }
-                        }}
-                        className="absolute right-4 top-4 text-slate-500 hover:text-red-400 p-1.5 rounded bg-slate-900/40 transition cursor-pointer opacity-0 group-hover:opacity-100 duration-150"
-                        title="Xóa Penalty"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                      {isAdmin && (
+                        <button
+                          onClick={() => {
+                            if (confirm('Xóa kết quả luân lưu Penalty này?')) {
+                              onDeletePenalty(p.id);
+                            }
+                          }}
+                          className="absolute right-4 top-4 text-slate-500 hover:text-red-400 p-1.5 rounded bg-slate-900/40 transition cursor-pointer opacity-0 group-hover:opacity-100 duration-150"
+                          title="Xóa Penalty"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      )}
 
                       <div className="text-center text-amber-500 text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-1.5 mb-2">
                         <Target className="w-3.5 h-3.5" />

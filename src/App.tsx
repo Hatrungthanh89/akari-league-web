@@ -31,6 +31,7 @@ export default function App() {
   const [finances, setFinances] = useState<Finance[]>([]);
   const [rules, setRules] = useState<Rule[]>([]);
   const [news, setNews] = useState<News[]>([]);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   // Firestore Listeners
   useEffect(() => {
@@ -270,8 +271,8 @@ export default function App() {
           </>
         );
       case 'players': return <PlayersView players={players} onAddPlayer={handleAddPlayer} onUpdatePlayer={handleUpdatePlayer} onDeletePlayer={handleDeletePlayer} />;
-      case 'results': return <ResultsView matches={matches} penalties={penalties} players={players} onAddMatch={handleAddMatch} onDeleteMatch={handleDeleteMatch} onAddPenalty={handleAddPenalty} onDeletePenalty={handleDeletePenalty} />;
-      case 'finances': return <FinancesView finances={finances} onAddFinance={handleAddFinance} onDeleteFinance={handleDeleteFinance} />;
+      case 'results': return <ResultsView isAdmin={isAdmin} matches={matches} penalties={penalties} players={players} onAddMatch={handleAddMatch} onDeleteMatch={handleDeleteMatch} onAddPenalty={handleAddPenalty} onDeletePenalty={handleDeletePenalty} />;
+      case 'finances': return <FinancesView isAdmin={isAdmin} finances={finances} onAddFinance={handleAddFinance} onDeleteFinance={handleDeleteFinance} />;
       case 'rules': return <RulesView rules={rules} onAddRule={handleAddRule} onUpdateRule={handleUpdateRule} onDeleteRule={handleDeleteRule} />;
       case 'news': return <NewsView news={news} onDeleteNews={handleDeleteNews} />;
       default: return <StandingsView players={players} matches={matches} penalties={penalties} />;
@@ -280,7 +281,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen text-slate-200 antialiased pb-16">
-      <Navbar currentTab={currentTab} setCurrentTab={setCurrentTab} />
+      <Navbar currentTab={currentTab} setCurrentTab={setCurrentTab} isAdmin={isAdmin} setIsAdmin={setIsAdmin} />
       <main className="container mx-auto px-4 py-8 max-w-6xl">
         {renderTabContent()}
       </main>

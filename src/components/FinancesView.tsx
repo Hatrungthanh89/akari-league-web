@@ -3,12 +3,13 @@ import { Finance } from '../types';
 import { DollarSign, PlusCircle, Trash2, Calendar, PiggyBank, TrendingUp, TrendingDown, X, Layers } from 'lucide-react';
 
 interface FinancesViewProps {
+  isAdmin: boolean;
   finances: Finance[];
   onAddFinance: (finance: Omit<Finance, 'id'>) => void;
   onDeleteFinance: (id: string) => void;
 }
 
-export default function FinancesView({ finances, onAddFinance, onDeleteFinance }: FinancesViewProps) {
+export default function FinancesView({ isAdmin, finances, onAddFinance, onDeleteFinance }: FinancesViewProps) {
   const [showAddModal, setShowAddModal] = useState(false);
 
   // Form states
@@ -62,13 +63,15 @@ export default function FinancesView({ finances, onAddFinance, onDeleteFinance }
           <h2 className="text-3xl font-extrabold text-white tracking-tight">Quản Lý Quỹ Đội</h2>
           <p className="text-slate-400 mt-1">Lập sổ cái theo dõi đóng tiền giải, chi phí sân bãi và mua sắm tiện ích chung</p>
         </div>
-        <button
-          onClick={() => setShowAddModal(true)}
-          className="btn-primary flex items-center gap-2 max-w-fit cursor-pointer animate-pulse"
-        >
-          <PlusCircle className="w-5 h-5 text-slate-900" />
-          <span>Thêm Giao Dịch</span>
-        </button>
+        {isAdmin && (
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="btn-primary flex items-center gap-2 max-w-fit cursor-pointer animate-pulse"
+          >
+            <PlusCircle className="w-5 h-5 text-slate-900" />
+            <span>Thêm Giao Dịch</span>
+          </button>
+        )}
       </div>
 
       {/* Balance Summary banner */}
@@ -167,13 +170,15 @@ export default function FinancesView({ finances, onAddFinance, onDeleteFinance }
                       {f.expense > 0 ? `-${f.expense.toLocaleString('vi-VN')} đ` : '-'}
                     </td>
                     <td className="text-center">
-                      <button
-                        onClick={() => handleDeleteClick(f.id, f.content)}
-                        className="text-slate-500 hover:text-red-400 p-1.5 rounded hover:bg-slate-950 transition cursor-pointer"
-                        title="Xóa giao dịch"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                      {isAdmin && (
+                        <button
+                          onClick={() => handleDeleteClick(f.id, f.content)}
+                          className="text-slate-500 hover:text-red-400 p-1.5 rounded hover:bg-slate-950 transition cursor-pointer"
+                          title="Xóa giao dịch"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))

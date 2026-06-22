@@ -204,3 +204,78 @@ body {
 input[type="checkbox"] {
   accent-color: #6366f1; /* indigo-500 */
 }
+
+/* ========== RESPONSIVE DESIGN ========== */
+
+/* Safe area for notched devices (iPhone X+, etc) */
+@supports (padding: env(safe-area-inset-top)) {
+  body {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Touch device: always show action buttons that normally appear on hover */
+@media (hover: none) and (pointer: coarse) {
+  .group-hover\:opacity-100 {
+    opacity: 1 !important;
+  }
+
+  .group:hover .group-hover\:opacity-100,
+  .group .group-hover\:opacity-100 {
+    opacity: 1 !important;
+  }
+
+  /* Disable hover scale transforms on touch */
+  .glass-panel:hover {
+    transform: none;
+  }
+
+  /* Slightly larger touch targets */
+  button, a, select, input[type="file"] {
+    min-height: 44px;
+  }
+
+  select {
+    min-height: 44px;
+  }
+}
+
+/* Mobile-specific table improvements */
+@media (max-width: 640px) {
+  .custom-table th {
+    padding: 10px 10px;
+    font-size: 0.65rem;
+  }
+
+  .custom-table td {
+    padding: 10px 10px;
+    font-size: 0.75rem;
+  }
+
+  .glass-panel {
+    border-radius: 16px;
+  }
+
+  .modal-content {
+    border-radius: 16px;
+    margin: 0.5rem;
+  }
+}
+
+/* Horizontal scroll indicator for tables */
+.overflow-x-auto {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent zoom on input focus (iOS) */
+@media screen and (max-width: 768px) {
+  input[type="text"],
+  input[type="number"],
+  input[type="date"],
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}

@@ -243,18 +243,18 @@ export default function PlayersView({ players, onAddPlayer, onUpdatePlayer, onDe
                 key={p.id}
                 className="glass-panel p-5 flex flex-col items-center text-center relative group hover:scale-[1.02] transition-all duration-300 border border-slate-800 hover:border-slate-700"
               >
-                {/* Actions (visible on hover) */}
-                <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                {/* Actions (always visible for mobile/pc) */}
+                <div className="absolute top-4 right-4 flex gap-2 z-10">
                   <button
                     onClick={() => handleEditClick(p)}
-                    className="text-slate-400 hover:text-amber-400 p-1.5 rounded bg-slate-900/60 transition cursor-pointer"
+                    className="text-amber-400 hover:text-amber-300 p-1.5 rounded-md bg-slate-800 border border-slate-700 hover:bg-slate-700 transition cursor-pointer shadow"
                     title="Sửa"
                   >
                     <Edit2 className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => handleDeleteClick(p.id, p.name)}
-                    className="text-slate-400 hover:text-red-400 p-1.5 rounded bg-slate-900/60 transition cursor-pointer"
+                    className="text-red-400 hover:text-red-300 p-1.5 rounded-md bg-slate-800 border border-slate-700 hover:bg-slate-700 transition cursor-pointer shadow"
                     title="Xóa"
                   >
                     <Trash2 className="w-4 h-4" />
