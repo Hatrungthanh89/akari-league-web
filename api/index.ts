@@ -107,12 +107,17 @@ app.post("/api/gemini/generate-round-summary", async (req, res) => {
 Thông tin vòng đấu:
 - Vòng số: ${round}
 - Danh sách tất cả các trận đấu của vòng: ${JSON.stringify(roundMatches)}
-- Danh sách các cầu thủ chính thức hiện tại: ${JSON.stringify(players)}
+- Danh sách các cầu thủ tham gia giải: ${JSON.stringify(players)}
 
-Hãy sinh ra lời bình luận chuyên biệt từ BA bình luận viên huyền thoại Việt Nam dưới góc nhìn và giọng điệu đặc quánh thương hiệu của họ:
-1. BLV Quang Huy (phong cách "passionate"): Bình luận rực lửa, hào sảng, tràn ngập khí thế tiến công cuồng nhiệt, ca tụng lòng quả cảm và khát vọng chiến thắng mãnh liệt.
-2. BLV Quang Tùng (phong cách "analytical"): Phân tích chuyên nghiệp sắc bén, khoa học, đi vào yếu tố chiến thuật phòng ngự phản công, hệ thống cự ly đội hình, khuyết điểm hoặc ưu điểm nổi bật.
-3. BLV Anh Ngọc (phong cách "poetic"): Lãng mạn, thơ mộng, dùng các hình tượng lãng mạn lơ đãng như chiều hoàng hôn nước Ý thơ mộng cổ kính để ca ngợi tinh thần thể thao bay bổng nghệ thuật.
+Nhiệm vụ của bạn:
+1. Tổng hợp kết quả chung của các trận đấu trong vòng ${round}.
+2. ĐÁNH GIÁ CHI TIẾT phong độ của CÁC CẦU THỦ NỔI BẬT trong vòng (dựa trên số bàn thắng, thẻ phạt trong trận). Hãy nêu đích danh tên cầu thủ.
+3. Đưa ra DỰ ĐOÁN, nhận định và lời khuyên chiến thuật cho vòng đấu tiếp theo (Vòng ${Number(round) + 1}).
+
+Hãy sinh ra lời bình luận chuyên biệt từ BA bình luận viên huyền thoại Việt Nam, mỗi người sẽ tập trung vào một khía cạnh và mang đậm giọng điệu thương hiệu của họ:
+1. BLV Quang Huy (phong cách "passionate" - Sôi động, nhiệt huyết): Tổng hợp diễn biến, kết quả vòng đấu vừa qua một cách bốc lửa, ca tụng lòng quả cảm và khí thế thi đấu của các đội.
+2. BLV Quang Tùng (phong cách "analytical" - Phân tích chiến thuật, sắc sảo): Tập trung đánh giá phong độ cá nhân của các cầu thủ xuất sắc hoặc mờ nhạt, phân tích chiến thuật, số liệu bàn thắng/thẻ phạt của họ đóng góp cho đội.
+3. BLV Anh Ngọc (phong cách "poetic" - Lãng mạn, nên thơ): Đưa ra nhận định và dự đoán cho vòng đấu tiếp theo bằng giọng văn lãng mạn, ví von bóng đá như nghệ thuật và đưa ra viễn cảnh nên thơ cho loạt trận tới.
 
 Yêu cầu xuất ra định dạng JSON chuẩn theo schema sau:
 {

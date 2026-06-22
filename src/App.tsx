@@ -140,18 +140,6 @@ export default function App() {
     matchReport.id = deterministicReportId;
     batch.set(doc(db, 'news', deterministicReportId), matchReport);
 
-    const tmpMatches = [...matches, newMatch];
-    let deterministicSummaryId = "";
-    if (isRoundComplete(newMatch.round, tmpMatches)) {
-      const alreadyHasSummary = news.some((n) => n.type === 'round_summary' && n.round === newMatch.round);
-      if (!alreadyHasSummary) {
-        const roundSummary = generateLocalRoundSummary(newMatch.round, tmpMatches, updatedPlayers);
-        deterministicSummaryId = `news_r_${newMatch.round}`;
-        roundSummary.id = deterministicSummaryId;
-        batch.set(doc(db, 'news', deterministicSummaryId), roundSummary);
-      }
-    }
-
     await batch.commit();
 
     // Call Gemini API in background
@@ -169,24 +157,6 @@ export default function App() {
       }
     }).catch(console.error);
 
-    if (deterministicSummaryId) {
-      fetch("/api/gemini/generate-round-summary", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          round: newMatch.round,
-          roundMatches: tmpMatches.filter((m) => m.round === newMatch.round),
-          players: updatedPlayers
-        })
-      }).then(res => res.json()).then(async (aiSummary) => {
-        if(aiSummary.title) {
-          await setDoc(doc(db, 'news', deterministicSummaryId), {
-            title: aiSummary.title,
-            comments: aiSummary.comments
-          }, { merge: true });
-        }
-      }).catch(console.error);
-    }
   };
 
   const handleDeleteMatch = async (id: string) => {
@@ -218,12 +188,47 @@ export default function App() {
     newsToDelete.forEach(n => batch.delete(doc(db, 'news', n.id)));
 
     const updatedMatches = matches.filter((m) => m.id !== id);
-    if (!isRoundComplete(targetMatch.round, updatedMatches)) {
-      const summaryToDelete = news.find((n) => n.type === 'round_summary' && n.round === targetMatch.round);
-      if (summaryToDelete) batch.delete(doc(db, 'news', summaryToDelete.id));
-    }
 
     await batch.commit();
+  };
+
+  const handleGenerateRoundSummary = async (round: number) => {
+    const roundMatches = matches.filter(m => m.round === round);
+    if (roundMatches.length === 0) {
+      alert("Vòng đấu này chưa có trận nào!");
+      return;
+    }
+
+    const deterministicSummaryId = `news_r_${round}`;
+    
+    // First, save the local (non-AI) summary to ensure it exists
+    const localSummary = generateLocalRoundSummary(round, matches, players);
+    localSummary.id = deterministicSummaryId;
+    await setDoc(doc(db, 'news', deterministicSummaryId), localSummary);
+
+    alert("Đang yêu cầu AI phân tích dữ liệu và nhận định Vòng " + round + ". Vui lòng chờ vài giây...");
+
+    // Then call Gemini API to enhance the summary
+    fetch("/api/gemini/generate-round-summary", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        round,
+        roundMatches,
+        players
+      })
+    }).then(res => res.json()).then(async (aiSummary) => {
+      if(aiSummary.title) {
+        await setDoc(doc(db, 'news', deterministicSummaryId), {
+          title: aiSummary.title,
+          comments: aiSummary.comments
+        }, { merge: true });
+        alert("Thành công! Bản tin AI phân tích Vòng " + round + " đã được xuất bản.");
+      }
+    }).catch(e => {
+      console.error(e);
+      alert("Có lỗi khi gọi AI. Bản tin mặc định đã được tạo.");
+    });
   };
 
   // Penalties
@@ -271,7 +276,7 @@ export default function App() {
           </>
         );
       case 'players': return <PlayersView players={players} onAddPlayer={handleAddPlayer} onUpdatePlayer={handleUpdatePlayer} onDeletePlayer={handleDeletePlayer} />;
-      case 'results': return <ResultsView isAdmin={isAdmin} matches={matches} penalties={penalties} players={players} onAddMatch={handleAddMatch} onDeleteMatch={handleDeleteMatch} onAddPenalty={handleAddPenalty} onDeletePenalty={handleDeletePenalty} />;
+      case 'results': return <ResultsView isAdmin={isAdmin} matches={matches} penalties={penalties} players={players} onAddMatch={handleAddMatch} onDeleteMatch={handleDeleteMatch} onAddPenalty={handleAddPenalty} onDeletePenalty={handleDeletePenalty} onGenerateRoundSummary={handleGenerateRoundSummary} />;
       case 'finances': return <FinancesView isAdmin={isAdmin} finances={finances} onAddFinance={handleAddFinance} onDeleteFinance={handleDeleteFinance} />;
       case 'rules': return <RulesView rules={rules} onAddRule={handleAddRule} onUpdateRule={handleUpdateRule} onDeleteRule={handleDeleteRule} />;
       case 'news': return <NewsView news={news} onDeleteNews={handleDeleteNews} />;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Match, Penalty, Player, MatchEvent, EventType } from '../types';
 import { TEAMS } from '../data';
-import { PlusCircle, Target, Trash2, Calendar, ShieldAlert, Award, X, AlertOctagon } from 'lucide-react';
+import { PlusCircle, Target, Trash2, Calendar, ShieldAlert, Award, X, AlertOctagon, Newspaper } from 'lucide-react';
 
 interface ResultsViewProps {
   isAdmin: boolean;
@@ -12,6 +12,7 @@ interface ResultsViewProps {
   onDeleteMatch: (id: string) => void;
   onAddPenalty: (penalty: Omit<Penalty, 'id'>) => void;
   onDeletePenalty: (id: string) => void;
+  onGenerateRoundSummary: (round: number) => void;
 }
 
 export default function ResultsView({
@@ -23,6 +24,7 @@ export default function ResultsView({
   onDeleteMatch,
   onAddPenalty,
   onDeletePenalty,
+  onGenerateRoundSummary,
 }: ResultsViewProps) {
   // Modal states
   const [showMatchModal, setShowMatchModal] = useState(false);
@@ -199,7 +201,19 @@ export default function ResultsView({
             return (
               <div key={roundNum} className="space-y-4">
                 <div className="border-b border-slate-800 pb-2 flex justify-between items-center">
-                  <h3 className="text-xl font-black text-indigo-400">Vòng đấu {roundNum}</h3>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <h3 className="text-xl font-black text-indigo-400">Vòng đấu {roundNum}</h3>
+                    {isAdmin && (
+                      <button
+                        onClick={() => onGenerateRoundSummary(roundNum)}
+                        className="text-xs bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500/30 hover:text-white px-2.5 py-1 rounded border border-indigo-500/30 transition cursor-pointer flex items-center gap-1.5 font-semibold"
+                        title="Viết bản tin tổng hợp cho vòng này"
+                      >
+                        <Newspaper className="w-3.5 h-3.5" />
+                        Chốt Vòng & Viết Bản Tin
+                      </button>
+                    )}
+                  </div>
                   <span className="text-slate-500 text-xs font-bold uppercase tracking-widest">{data.matches.length} Trận đã đá</span>
                 </div>
 
